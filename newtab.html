@@ -27,28 +27,33 @@
     <div id="app">
       <header class="top-bar">
         <div class="chip" id="greeting">Hello there</div>
-        <div class="chip" id="date-display">Monday, Jan 20</div>
+        <button class="chip icon-chip" id="settings-toggle" aria-label="Open settings">
+          <i class="ph ph-gear"></i>
+        </button>
       </header>
 
       <!-- Main Content: Clock, Focus, Search -->
       <main class="center-content">
+        <div class="date-container">
+          <div id="date-display" class="date-below">Monday, Jan 20</div>
+        </div>
         <div id="clock-widget" class="widget clock-widget">
           <h1 id="time-display">00:00:00</h1>
         </div>
-        <p class="tagline">Stay sharp. Build boldly.</p>
+        <p class="tagline">Stay sharp. Build smart.</p>
 
         <div class="quick-actions">
-          <a class="action-chip" href="https://github.com" target="_blank" rel="noopener noreferrer">
+          <a class="action-chip" href="https://github.com/Dharanish-AM" target="_blank" rel="noopener noreferrer">
             <i class="ph ph-github-logo"></i>
             <span>GitHub</span>
           </a>
+          <a class="action-chip" href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
+            <i class="ph ph-linkedin-logo"></i>
+            <span>LinkedIn</span>
+          </a>
           <a class="action-chip" href="https://mail.google.com" target="_blank" rel="noopener noreferrer">
             <i class="ph ph-envelope-simple"></i>
-            <span>Mail</span>
-          </a>
-          <a class="action-chip" href="https://calendar.google.com" target="_blank" rel="noopener noreferrer">
-            <i class="ph ph-calendar-blank"></i>
-            <span>Calendar</span>
+            <span>Gmail</span>
           </a>
         </div>
       </main>
@@ -60,6 +65,33 @@
       </footer>
 
       <!-- Bottom Bar: Todo, Notes, Timer -->
+
+      <!-- Settings Panel -->
+      <section class="settings-panel" id="settings-panel" aria-label="Settings">
+        <div class="settings-header">
+          <span class="settings-title">Settings</span>
+          <button class="icon-button" id="settings-close" aria-label="Close settings">
+            <i class="ph ph-x"></i>
+          </button>
+        </div>
+
+        <div class="settings-group">
+          <div class="group-label">Theme</div>
+          <div class="pill-options" id="theme-options">
+            <button class="pill" data-theme-option="system">System</button>
+            <button class="pill" data-theme-option="dark">Dark</button>
+            <button class="pill" data-theme-option="light">Light</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="group-label">Background</div>
+          <button class="pill toggle" id="stars-toggle" aria-pressed="true">
+            <span class="toggle-dot"></span>
+            <span class="toggle-label">Stars on</span>
+          </button>
+        </div>
+      </section>
 
       <!-- Overlays -->
     </div>
