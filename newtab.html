@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Tab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Top Bar: Links & Settings -->
+
+      <!-- Main Content: Clock, Focus, Search -->
+      <main class="center-content">
+        <div id="clock-widget" class="widget clock-widget">
+          <h1 id="time-display">00:00:00</h1>
+        </div>
+      </main>
+
+      <footer class="bottom-bar">
+        <div id="quote-widget" class="widget quote-widget">
+          <h2 id="quote-display"></h2>
+        </div>
+      </footer>
+
+      <!-- Bottom Bar: Todo, Notes, Timer -->
+
+      <!-- Overlays -->
+    </div>
+    <script src="quotes.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

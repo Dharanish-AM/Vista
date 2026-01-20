@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Vista",
+  "version": "1.0.0",
+  "description": "A minimal, distraction-free productivity dashboard for your new tab.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": ["storage", "unlimitedStorage"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://unpkg.com https://fonts.gstatic.com"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

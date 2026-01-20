@@ -1,0 +1,147 @@
+:root {
+  --bg-color: #1a1a1a;
+  --text-color: #ffffff;
+  --text-muted: #888888;
+  --accent-color: #ffffff;
+  --panel-bg: rgba(255, 255, 255, 0.08);
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --hover-bg: rgba(255, 255, 255, 0.15);
+  --input-bg: rgba(0, 0, 0, 0.2);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --font-family: "JetBrains Mono", monospace;
+  --transition-speed: 0.2s;
+}
+
+[data-theme="light"] {
+  --bg-color: #f5f5f7;
+  --text-color: #1d1d1f;
+  --text-muted: #86868b;
+  --accent-color: #0071e3;
+  --panel-bg: rgba(255, 255, 255, 0.8);
+  --panel-border: rgba(0, 0, 0, 0.1);
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --input-bg: rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  height: 100vh;
+  overflow: hidden;
+  transition:
+    background-color var(--transition-speed),
+    color var(--transition-speed);
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 24px;
+  position: relative;
+}
+
+/* Main Center */
+.center-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Clock */
+.clock-widget {
+  text-align: center;
+  margin-bottom: 8px;
+}
+#time-display {
+  font-size: 14rem; /* Ultra Ultra Big */
+  font-weight: 600;
+  letter-spacing: -4px;
+  line-height: 1;
+}
+#time-display .seconds {
+  font-size: 0.7em;
+  opacity: 0.5;
+  font-weight: 400;
+  vertical-align: baseline;
+  margin-left: -10px; /* Pull it closer */
+}
+#date-display {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  opacity: 0.8;
+  display: none; /* Hidden as per request */
+}
+
+/* Quote Widget - Moved top style override here for cohesion */
+.quote-widget {
+  margin-top: 0; /* Tighten up since search is gone */
+  text-align: center;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out 0.4s forwards !important;
+}
+#quote-display {
+  font-size: 1.8rem; /* Bigger quote */
+  font-weight: 400;
+  color: var(--text-color);
+  letter-spacing: 0.5px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-style: normal; /* Cleaner look */
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Footer */
+.bottom-bar {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 20px;
+  width: 100%;
+}
+
+/* Quote Widget */
+.quote-widget {
+  text-align: center;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out 0.4s forwards !important;
+}
+#quote-display {
+  font-size: 1.2rem; /* reduced slightly for footer balance */
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-style: italic;
+  opacity: 0.8;
+  line-height: 1.6;
+}
