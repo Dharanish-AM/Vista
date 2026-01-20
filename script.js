@@ -1,23 +1,13 @@
-/**
- * Vista - Minimal Productive New Tab
- * Focused on speed (<300ms) and simplicity.
- */
-
-// --- Constants & Config ---
-// --- Constants & Config ---
 const CONFIG = {
-  DEFAULT_THEME: "system",
+  DEFAULT_THEME: "dark",
 };
 
-// --- State Management ---
 const state = {
-  theme: "system",
+  theme: "dark",
 };
 
-// --- Utils ---
 const $ = (selector) => document.querySelector(selector);
 const saveState = () => {
-  // Only save what's necessary to persist
   const toSave = {
     theme: state.theme,
   };
@@ -25,28 +15,16 @@ const saveState = () => {
 };
 
 const applyTheme = () => {
-  const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
   const theme = state.theme;
   const target = document.documentElement;
 
-  if (theme === "light") {
-    target.setAttribute("data-theme", "light");
-  } else if (theme === "dark") {
+  if (theme === "dark") {
     target.removeAttribute("data-theme");
   } else {
-    // system
-    if (prefersLight) target.setAttribute("data-theme", "light");
-    else target.removeAttribute("data-theme");
+    target.setAttribute("data-theme", theme);
   }
 };
 
-const applyStars = () => {
-  document.body.classList.toggle("no-stars", !state.stars);
-};
-
-// --- Modules ---
-
-/** Clock & Date */
 const Clock = {
   init() {
     this.timeDisplay = $("#time-display");
@@ -58,7 +36,6 @@ const Clock = {
 
   update() {
     const now = new Date();
-    // 12-hour format
     let h = now.getHours();
     const m = now.getMinutes().toString().padStart(2, "0");
     const s = now.getSeconds().toString().padStart(2, "0");
@@ -66,15 +43,13 @@ const Clock = {
     h = h % 12;
     h = h ? h : 12;
 
-    // Updated to show Seconds as requested
     this.timeDisplay.innerHTML = `${h}:${m}<span class="seconds">:${s}</span>`;
-    
-    // Tick animation on seconds change
-    const secondsEl = this.timeDisplay.querySelector('.seconds');
+
+    const secondsEl = this.timeDisplay.querySelector(".seconds");
     if (secondsEl) {
-      secondsEl.classList.remove('tick');
-      void secondsEl.offsetWidth; // Force reflow
-      secondsEl.classList.add('tick');
+      secondsEl.classList.remove("tick");
+      void secondsEl.offsetWidth;
+      secondsEl.classList.add("tick");
     }
 
     if (this.dateDisplay) {
@@ -98,17 +73,14 @@ const Clock = {
   },
 };
 
-/** Quotes */
 const Quotebar = {
   init() {
     this.el = $("#quote-display");
     this.update();
-    // Update quote every hour to stay relatable?
     setInterval(() => this.update(), 60 * 60 * 1000);
   },
   update() {
     if (!this.el) return;
-    // Safety check if QUOTES is missing
     if (typeof QUOTES === "undefined") {
       this.el.textContent = "Time to focus.";
       return;
@@ -123,34 +95,47 @@ const Quotebar = {
     else if (hour >= 17 && hour < 22) bucket = QUOTES.evening;
     else bucket = QUOTES.night;
 
-    // Mix in general quotes occasionally for variety?
-    // Let's just stick to time-based + random selection for now.
     const randomIndex = Math.floor(Math.random() * bucket.length);
 
-    // Trigger a quick fade animation on swap
     this.el.classList.remove("quote-fade");
-    // Force reflow to restart animation
     void this.el.offsetWidth;
     this.el.textContent = bucket[randomIndex];
     this.el.classList.add("quote-fade");
   },
 };
 
-/** Settings */
 const Settings = {
   init() {
     this.toggle = $("#settings-toggle");
     this.panel = $("#settings-panel");
     this.backdrop = $("#settings-backdrop");
     this.close = $("#settings-close");
+    this.themeOptions = $("#theme-options");
 
     this.bind();
+    this.render();
   },
 
   bind() {
     this.toggle?.addEventListener("click", () => this.open());
     this.close?.addEventListener("click", () => this.close_panel());
     this.backdrop?.addEventListener("click", () => this.close_panel());
+
+    this.themeOptions?.querySelectorAll(".pill").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const theme = e.target.dataset.value;
+        state.theme = theme;
+        saveState();
+        applyTheme();
+        this.render();
+      });
+    });
+  },
+
+  render() {
+    this.themeOptions?.querySelectorAll(".pill").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.value === state.theme);
+    });
   },
 
   open() {
@@ -164,7 +149,6 @@ const Settings = {
   },
 };
 
-// --- Boot ---
 document.addEventListener("DOMContentLoaded", () => {
   // Load state
   chrome.storage.sync.get(null, (items) => {
@@ -172,7 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     applyTheme();
 
-    // Init Modules
     Clock.init();
     Quotebar.init();
     Settings.init();
