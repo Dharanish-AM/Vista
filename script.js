@@ -12,7 +12,6 @@ const CONFIG = {
 // --- State Management ---
 const state = {
   theme: "system",
-  stars: true,
 };
 
 // --- Utils ---
@@ -21,7 +20,6 @@ const saveState = () => {
   // Only save what's necessary to persist
   const toSave = {
     theme: state.theme,
-    stars: state.stars,
   };
   chrome.storage.sync.set(toSave);
 };
@@ -143,59 +141,26 @@ const Settings = {
   init() {
     this.toggle = $("#settings-toggle");
     this.panel = $("#settings-panel");
+    this.backdrop = $("#settings-backdrop");
     this.close = $("#settings-close");
-    this.themeButtons = Array.from(document.querySelectorAll("[data-theme-option]"));
-    this.starsToggle = $("#stars-toggle");
 
     this.bind();
-    this.sync();
-
-    // React to system theme changes when in system mode
-    this.mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
-    this.mediaQuery.addEventListener("change", () => {
-      if (state.theme === "system") applyTheme();
-    });
   },
 
   bind() {
-    this.toggle?.addEventListener("click", () => this.panel?.classList.toggle("open"));
-    this.close?.addEventListener("click", () => this.panel?.classList.remove("open"));
-
-    this.themeButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const value = btn.dataset.themeOption;
-        state.theme = value;
-        applyTheme();
-        this.sync();
-        saveState();
-      });
-    });
-
-    this.starsToggle?.addEventListener("click", () => {
-      state.stars = !state.stars;
-      applyStars();
-      this.sync();
-      saveState();
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!this.panel || !this.toggle) return;
-      if (this.panel.contains(e.target) || this.toggle.contains(e.target)) return;
-      this.panel.classList.remove("open");
-    });
+    this.toggle?.addEventListener("click", () => this.open());
+    this.close?.addEventListener("click", () => this.close_panel());
+    this.backdrop?.addEventListener("click", () => this.close_panel());
   },
 
-  sync() {
-    this.themeButtons.forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.themeOption === state.theme);
-    });
+  open() {
+    this.panel?.classList.add("open");
+    this.backdrop?.classList.add("open");
+  },
 
-    if (this.starsToggle) {
-      this.starsToggle.classList.toggle("active", state.stars);
-      const label = this.starsToggle.querySelector(".toggle-label");
-      if (label) label.textContent = state.stars ? "Stars on" : "Stars off";
-      this.starsToggle.setAttribute("aria-pressed", state.stars ? "true" : "false");
-    }
+  close_panel() {
+    this.panel?.classList.remove("open");
+    this.backdrop?.classList.remove("open");
   },
 };
 
@@ -203,13 +168,9 @@ const Settings = {
 document.addEventListener("DOMContentLoaded", () => {
   // Load state
   chrome.storage.sync.get(null, (items) => {
-    // Only theme persistence might matter now, but user said "others nothing".
-    // Assuming we keep the code for theme if we ever add settings back, or just default system.
     if (items && items.theme) state.theme = items.theme;
-    if (items && typeof items.stars === "boolean") state.stars = items.stars;
 
     applyTheme();
-    applyStars();
 
     // Init Modules
     Clock.init();

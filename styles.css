@@ -14,13 +14,14 @@
 }
 
 [data-theme="light"] {
-  --bg-color: #f5f5f7;
+  --bg-color: #ffffff;
   --text-color: #1d1d1f;
-  --text-muted: #86868b;
-  --accent-color: #0071e3;
-  --panel-bg: rgba(255, 255, 255, 0.8);
+  --text-muted: #6b7280;
+  --accent-color: #111827;
+  --accent-strong: #374151;
+  --panel-bg: rgba(0, 0, 0, 0.03);
   --panel-border: rgba(0, 0, 0, 0.1);
-  --hover-bg: rgba(0, 0, 0, 0.05);
+  --hover-bg: rgba(0, 0, 0, 0.06);
   --input-bg: rgba(0, 0, 0, 0.05);
   --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
@@ -101,12 +102,12 @@ body {
   position: absolute;
   inset: 0;
   background-image: 
-    radial-gradient(circle, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-    radial-gradient(circle, rgba(224, 231, 255, 0.4) 0.8px, transparent 0.8px),
-    radial-gradient(circle, rgba(255, 255, 255, 0.3) 0.6px, transparent 0.6px);
-  background-size: 180px 180px, 140px 140px, 220px 220px;
+    radial-gradient(circle, rgba(255, 255, 255, 0.7) 1.2px, transparent 1.2px),
+    radial-gradient(circle, rgba(224, 231, 255, 0.6) 0.9px, transparent 0.9px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.5) 0.7px, transparent 0.7px);
+  background-size: 120px 120px, 90px 90px, 150px 150px;
   background-position: 0 0, 40px 60px, 100px 20px;
-  opacity: 0.3;
+  opacity: 0.55;
   mix-blend-mode: screen;
   animation: starDrift 90s linear infinite;
   -webkit-mask-image: radial-gradient(circle at 50% 45%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 38%, rgba(0, 0, 0, 0.6) 58%, #000 75%);
@@ -392,51 +393,77 @@ body.no-stars .particles {
   pointer-events: none;
 }
 
-.settings-panel {
-  position: absolute;
-  top: 76px;
-  right: 24px;
-  width: 280px;
-  padding: 16px;
-  border-radius: 18px;
-  background: rgba(10, 14, 20, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(18px);
+.settings-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-6px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.2s ease;
+  z-index: 4;
+}
+
+.settings-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.settings-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  width: 100%;
+  max-width: 380px;
+  padding: 28px;
+  border-radius: 24px;
+  background: rgba(10, 14, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
   z-index: 5;
 }
 
 .settings-panel.open {
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0);
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .settings-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 0;
+  gap: 12px;
 }
 
 .settings-title {
   font-weight: 600;
   color: var(--text-color);
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
+  font-size: 1rem;
 }
 
 .icon-button {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-muted);
-  padding: 6px;
-  border-radius: 10px;
+  padding: 8px;
+  border-radius: 12px;
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
 }
 
 .icon-button:hover {
