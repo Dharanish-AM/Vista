@@ -48,6 +48,25 @@ const Clock = {
 
     // Updated to show Seconds as requested
     this.timeDisplay.innerHTML = `${h}:${m}<span class="seconds">:${s}</span>`;
+
+    if (this.dateDisplay) {
+      const day = now.toLocaleDateString("en-US", { weekday: "long" });
+      const month = now.toLocaleDateString("en-US", { month: "short" });
+      const date = now.getDate();
+      this.dateDisplay.textContent = `${day}, ${month} ${date}`;
+    }
+
+    if (this.greeting) {
+      const hour = now.getHours();
+      let message = "Hello";
+
+      if (hour >= 5 && hour < 12) message = "Good morning";
+      else if (hour >= 12 && hour < 17) message = "Good afternoon";
+      else if (hour >= 17 && hour < 22) message = "Good evening";
+      else message = "Up late?";
+
+      this.greeting.textContent = message;
+    }
   },
 };
 
@@ -79,7 +98,13 @@ const Quotebar = {
     // Mix in general quotes occasionally for variety?
     // Let's just stick to time-based + random selection for now.
     const randomIndex = Math.floor(Math.random() * bucket.length);
+
+    // Trigger a quick fade animation on swap
+    this.el.classList.remove("quote-fade");
+    // Force reflow to restart animation
+    void this.el.offsetWidth;
     this.el.textContent = bucket[randomIndex];
+    this.el.classList.add("quote-fade");
   },
 };
 

@@ -17,13 +17,39 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="ambient">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="mesh"></div>
+      <div class="particles"></div>
+      <div class="scanlines"></div>
+    </div>
     <div id="app">
-      <!-- Top Bar: Links & Settings -->
+      <header class="top-bar">
+        <div class="chip" id="greeting">Hello there</div>
+        <div class="chip" id="date-display">Monday, Jan 20</div>
+      </header>
 
       <!-- Main Content: Clock, Focus, Search -->
       <main class="center-content">
         <div id="clock-widget" class="widget clock-widget">
           <h1 id="time-display">00:00:00</h1>
+        </div>
+        <p class="tagline">Stay sharp. Build boldly.</p>
+
+        <div class="quick-actions">
+          <a class="action-chip" href="https://github.com" target="_blank" rel="noopener noreferrer">
+            <i class="ph ph-github-logo"></i>
+            <span>GitHub</span>
+          </a>
+          <a class="action-chip" href="https://mail.google.com" target="_blank" rel="noopener noreferrer">
+            <i class="ph ph-envelope-simple"></i>
+            <span>Mail</span>
+          </a>
+          <a class="action-chip" href="https://calendar.google.com" target="_blank" rel="noopener noreferrer">
+            <i class="ph ph-calendar-blank"></i>
+            <span>Calendar</span>
+          </a>
         </div>
       </main>
 
