@@ -1,20 +1,46 @@
-# Vista
+# Vista - Minimal Productive New Tab
 
-**The Ultra-Minimalist New Tab for Focus & Speed**
+Vista is a lightweight, high-performance New Tab extension focused on aesthetics, speed, and focus. It replaces your default new tab page with a clean, ambient interface featuring a clock, greeting, and quick links, all customizable with beautiful themes.
 
-Reclaim your digital focus with Vista, a Chrome extension designed for developers and minimalists who demand speed, clarity, and aesthetics. Stripping away the chaos of the modern web, Vista replaces your new tab page with a serene, distraction-free environment that loads in under 300ms.
+![Vista Dark Theme](assets/theme-dark.png)
 
 ## Features
 
-- **Ultra-Minimal Aesthetics**: A clean, distraction-free interface built with a "less is more" philosophy.
-- **Precision Timekeeping**: Features a massive, precision-tuned clock (`HH:MM:SS`) centered for immediate clarity.
-- **Developer Typography**: Built entirely using `JetBrains Mono` for a premium, code-native feel.
-- **Relatable Insights**: A curated collection of time-aware quotes that offer subtle motivation—from "Coffee first" mornings to "Commit your changes" evenings.
-- **Blazing Fast**: Engineered with pure Vanilla JS/CSS (no frameworks) for instant load times and negligible memory usage.
-- **Dark Mode Native**: A deep, reliable dark theme that is easy on the eyes, day or night.
+- **⚡ Blazing Fast**: Optimized for speed (<300ms load time).
+- **🎨 Dynamic Themes**: Choose from Dark, Light, Nebula, Coffee, Botanical, and Rose color palettes.
+- **✨ Ambient Visuals**: Beautiful, animated background gradients and orbs that adapt to your theme.
+- **🕰️ Clean Interface**: Minimal clock, date, and greeting to keep you focused.
+- **🔗 Quick Actions**: Fast access to your most used links.
+- **⚙️ Custom Settings**: Easy-to-use settings panel to toggle themes and preferences.
 
-## Why Vista?
+## Themes
 
-Vista is for those who find beauty in simplicity. It removes the noise of widgets, search bars, and to-do lists to leave you with only what matters: the present moment. It transforms every new tab into a breath of fresh air. 
+Vista comes with a variety of carefully curated themes to suit your mood:
+| Dark | Light |
+| :---: | :---: |
+| ![Dark](assets/theme-dark.png) | ![Light](assets/theme-light.png) |
 
-**No tracking. No ads. No distractions.**
+| Nebula | Coffee |
+| :---: | :---: |
+| ![Nebula](assets/theme-nebula.png) | ![Coffee](assets/theme-coffee.png) |
+
+| Botanical | Rose |
+| :---: | :---: |
+| ![Botanical](assets/theme-botanical.png) | ![Rose](assets/theme-rose.png) |
+
+## Installation
+
+1.  Clone this repository.
+2.  Open Chrome and navigate to `chrome://extensions`.
+3.  Enable "Developer mode" in the top right corner.
+4.  Click "Load unpacked" and select the extension directory.
+
+## Tech Stack
+
+- **HTML5**: Semantic structure.
+- **CSS3**: Advanced animations, variables, and responsive design.
+- **JavaScript (ES6+)**: Modular logic for clock, themes, and settings.
+
+## License
+
+MIT License. Free to use and modify.
