@@ -70,6 +70,14 @@ const Clock = {
 
     // Updated to show Seconds as requested
     this.timeDisplay.innerHTML = `${h}:${m}<span class="seconds">:${s}</span>`;
+    
+    // Tick animation on seconds change
+    const secondsEl = this.timeDisplay.querySelector('.seconds');
+    if (secondsEl) {
+      secondsEl.classList.remove('tick');
+      void secondsEl.offsetWidth; // Force reflow
+      secondsEl.classList.add('tick');
+    }
 
     if (this.dateDisplay) {
       const day = now.toLocaleDateString("en-US", { weekday: "long" });
