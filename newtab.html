@@ -34,11 +34,11 @@
           <div class="chip" id="greeting">Hello there</div>
         </div>
         <div class="info-row top-info">
-            <div class="chip date-chip">
-              <span id="date-display">Monday, Jan 20</span>
-            </div>
-            <div id="weather-chip" class="chip weather-chip hidden"></div>
+          <div class="chip date-chip">
+            <span id="date-display">Monday, Jan 20</span>
           </div>
+          <div id="weather-chip" class="chip weather-chip hidden"></div>
+        </div>
         <button
           class="chip icon-chip"
           id="settings-toggle"
@@ -54,7 +54,9 @@
           <h1 id="time-display">00:00:00</h1>
         </div>
         <div class="focus-block">
-          <label for="focus-input" class="focus-label">What is your main focus for today?</label>
+          <label for="focus-input" class="focus-label"
+            >What is your main focus for today?</label
+          >
           <input
             id="focus-input"
             type="text"
@@ -63,35 +65,7 @@
             placeholder="Type your focus and press Enter"
           />
         </div>
-        <div class="quick-actions">
-          <a
-            class="action-chip"
-            href="https://github.com/Dharanish-AM"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <i class="ph ph-github-logo"></i>
-            <span>GitHub</span>
-          </a>
-          <a
-            class="action-chip"
-            href="https://www.linkedin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <i class="ph ph-linkedin-logo"></i>
-            <span>LinkedIn</span>
-          </a>
-          <a
-            class="action-chip"
-            href="https://mail.google.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <i class="ph ph-envelope-simple"></i>
-            <span>Gmail</span>
-          </a>
-        </div>
+        <div class="quick-actions"></div>
       </main>
 
       <footer class="bottom-bar">
@@ -132,6 +106,64 @@
             <button class="pill" data-value="inter">Inter</button>
             <button class="pill" data-value="playfair">Playfair Display</button>
             <button class="pill" data-value="robotoMono">Roboto Mono</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <label class="group-label">Shortcuts</label>
+          <div id="shortcuts-list" class="shortcuts-list"></div>
+
+          <button id="add-shortcut-btn" class="pill full-width">
+            <i class="ph ph-plus"></i> Add Shortcut
+          </button>
+
+          <div
+            id="shortcut-form-container"
+            class="shortcut-form-container hidden"
+          >
+            <form id="shortcut-form">
+              <input type="hidden" id="shortcut-index" value="-1" />
+              <div class="form-row">
+                <input
+                  type="text"
+                  id="shortcut-title"
+                  placeholder="Title (e.g. GitHub)"
+                  required
+                />
+              </div>
+              <div class="form-row">
+                <input
+                  type="url"
+                  id="shortcut-url"
+                  placeholder="URL (https://...)"
+                  required
+                />
+              </div>
+              <div class="form-row">
+                <input
+                  type="text"
+                  id="shortcut-icon"
+                  placeholder="Icon Name (e.g. globe)"
+                />
+                <a
+                  href="https://phosphoricons.com"
+                  target="_blank"
+                  class="icon-help"
+                  title="Find icons"
+                  ><i class="ph ph-question"></i
+                ></a>
+              </div>
+              <div class="form-actions">
+                <button
+                  type="button"
+                  id="cancel-shortcut-btn"
+                  class="pill secondary"
+                >
+                  Cancel
+                </button>
+                <button type="submit" class="pill primary">Save</button>
+              </div>
+            </form>
           </div>
         </div>
 

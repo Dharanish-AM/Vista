@@ -3,6 +3,15 @@ const CONFIG = {
   DEFAULT_FONT: "jetbrains",
   DEFAULT_TIME_FORMAT: "12h",
   DEFAULT_SHOW_SECONDS: true,
+  DEFAULT_SHORTCUTS: [
+    { title: "GitHub", url: "https://github.com", icon: "github-logo" },
+    {
+      title: "LinkedIn",
+      url: "https://www.linkedin.com",
+      icon: "linkedin-logo",
+    },
+    { title: "Gmail", url: "https://mail.google.com", icon: "envelope-simple" },
+  ],
 };
 
 const state = {
@@ -11,6 +20,7 @@ const state = {
   timeFormat: CONFIG.DEFAULT_TIME_FORMAT,
   showSeconds: CONFIG.DEFAULT_SHOW_SECONDS,
   focus: "",
+  shortcuts: [...CONFIG.DEFAULT_SHORTCUTS],
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -21,6 +31,7 @@ const saveState = () => {
     timeFormat: state.timeFormat,
     showSeconds: state.showSeconds,
     focus: state.focus,
+    shortcuts: state.shortcuts,
   };
   chrome.storage.sync.set(toSave);
 };
@@ -62,9 +73,10 @@ const Clock = {
       h = h ? h : 12;
     }
 
-    const hourStr = state.timeFormat === "12h"
-      ? h.toString().padStart(2, "0")
-      : h.toString().padStart(2, "0");
+    const hourStr =
+      state.timeFormat === "12h"
+        ? h.toString().padStart(2, "0")
+        : h.toString().padStart(2, "0");
 
     const secondsMarkup = state.showSeconds
       ? `<span class="seconds">:${s}</span>`
@@ -148,7 +160,6 @@ const Weather = {
   async fetchWeather() {
     this.el.classList.add("hidden");
 
-    // Helper to fetch weather from lat/lon
     const getFromCoords = async (lat, lon) => {
       try {
         const response = await fetch(
@@ -163,7 +174,6 @@ const Weather = {
       }
     };
 
-    // 1. Try GPS with relaxed options
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -171,13 +181,10 @@ const Weather = {
         },
         async (error) => {
           console.warn(`GPS failed (${error.code}), trying IP fallback...`);
-          // If permission denied (1), don't force fallback to avoid creeping user out
-          // showing "Enable Loc" allows them to choose.
           if (error.code === 1) {
             this.showError(true);
             return;
           }
-          // For unavailable (2) or timeout (3), try IP
           try {
             const ipRes = await fetch("https://get.geojs.io/v1/ip/geo.json");
             if (!ipRes.ok) throw new Error("IP Geo failed");
@@ -185,13 +192,12 @@ const Weather = {
             getFromCoords(ipData.latitude, ipData.longitude);
           } catch (ipErr) {
             console.error(ipErr);
-            this.showError(); // Generic offline error
+            this.showError();
           }
         },
         { timeout: 8000, maximumAge: 600000 },
       );
     } else {
-      // No geo support, try IP directly
       try {
         const ipRes = await fetch("https://get.geojs.io/v1/ip/geo.json");
         if (!ipRes.ok) throw new Error("IP Geo failed");
@@ -210,7 +216,6 @@ const Weather = {
       this.el.classList.add("clickable");
       this.el.onclick = () => this.fetchWeather();
     } else {
-      // Show generic warning but keep it minimal
       this.el.innerHTML = `<i class="ph ph-warning"></i>`;
       this.el.classList.remove("hidden");
       this.el.classList.remove("clickable");
@@ -221,11 +226,9 @@ const Weather = {
   render(current) {
     if (!current) return;
 
-    // Remove error state styles
     this.el.classList.remove("clickable");
     this.el.onclick = null;
 
-    // Convert WMO code to icon class
     const getIcon = (code) => {
       const map = {
         0: "ph-sun",
@@ -264,6 +267,32 @@ const Weather = {
   },
 };
 
+const Shortcuts = {
+  init() {
+    this.container = $(".quick-actions");
+    this.render();
+  },
+
+  render() {
+    if (!this.container) return;
+    this.container.innerHTML = state.shortcuts
+      .map(
+        (shortcut) => `
+      <a
+        class="action-chip"
+        href="${shortcut.url}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <i class="ph ph-${shortcut.icon}"></i>
+        <span>${shortcut.title}</span>
+      </a>
+    `,
+      )
+      .join("");
+  },
+};
+
 const Settings = {
   init() {
     this.toggle = $("#settings-toggle");
@@ -274,9 +303,15 @@ const Settings = {
     this.fontOptions = $("#font-options");
     this.timeFormatOptions = $("#time-format-options");
     this.secondsToggle = $("#seconds-toggle");
+    this.shortcutsList = $("#shortcuts-list");
+    this.addShortcutBtn = $("#add-shortcut-btn");
+    this.shortcutForm = $("#shortcut-form");
+    this.shortcutFormContainer = $("#shortcut-form-container");
+    this.cancelShortcutBtn = $("#cancel-shortcut-btn");
 
     this.bind();
     this.render();
+    this.renderShortcutsList();
   },
 
   bind() {
@@ -323,6 +358,19 @@ const Settings = {
         this.render();
       });
     });
+
+    this.addShortcutBtn?.addEventListener("click", () => {
+      this.showShortcutForm();
+    });
+
+    this.cancelShortcutBtn?.addEventListener("click", () => {
+      this.hideShortcutForm();
+    });
+
+    this.shortcutForm?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      this.saveShortcut();
+    });
   },
 
   render() {
@@ -344,6 +392,105 @@ const Settings = {
     });
   },
 
+  renderShortcutsList() {
+    if (!this.shortcutsList) return;
+    this.shortcutsList.innerHTML = state.shortcuts
+      .map(
+        (shortcut, index) => `
+      <div class="shortcut-item">
+        <div class="shortcut-info">
+          <i class="ph ph-${shortcut.icon}"></i>
+          <span>${shortcut.title}</span>
+        </div>
+        <div class="shortcut-actions">
+          <button class="icon-button small edit-shortcut" data-index="${index}">
+            <i class="ph ph-pencil-simple"></i>
+          </button>
+          <button class="icon-button small delete-shortcut" data-index="${index}">
+            <i class="ph ph-trash"></i>
+          </button>
+        </div>
+      </div>
+    `,
+      )
+      .join("");
+
+    this.shortcutsList.querySelectorAll(".edit-shortcut").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const index = e.currentTarget.dataset.index;
+        this.editShortcut(index);
+      });
+    });
+
+    this.shortcutsList.querySelectorAll(".delete-shortcut").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const index = e.currentTarget.dataset.index;
+        this.deleteShortcut(index);
+      });
+    });
+  },
+
+  showShortcutForm(index = null) {
+    this.shortcutFormContainer.classList.remove("hidden");
+    this.addShortcutBtn.classList.add("hidden");
+
+    const titleInput = $("#shortcut-title");
+    const urlInput = $("#shortcut-url");
+    const iconInput = $("#shortcut-icon");
+    const indexInput = $("#shortcut-index");
+
+    if (index !== null) {
+      const shortcut = state.shortcuts[index];
+      titleInput.value = shortcut.title;
+      urlInput.value = shortcut.url;
+      iconInput.value = shortcut.icon;
+      indexInput.value = index;
+    } else {
+      titleInput.value = "";
+      urlInput.value = "";
+      iconInput.value = "";
+      indexInput.value = "-1";
+    }
+
+    setTimeout(() => titleInput.focus(), 50);
+  },
+
+  hideShortcutForm() {
+    this.shortcutFormContainer.classList.add("hidden");
+    this.addShortcutBtn.classList.remove("hidden");
+  },
+
+  saveShortcut() {
+    const title = $("#shortcut-title").value.trim();
+    const url = $("#shortcut-url").value.trim();
+    const icon = $("#shortcut-icon").value.trim() || "link";
+    const index = parseInt($("#shortcut-index").value);
+
+    if (!title || !url) return;
+
+    if (index >= 0) {
+      state.shortcuts[index] = { title, url, icon };
+    } else {
+      state.shortcuts.push({ title, url, icon });
+    }
+
+    saveState();
+    Shortcuts.render();
+    this.renderShortcutsList();
+    this.hideShortcutForm();
+  },
+
+  editShortcut(index) {
+    this.showShortcutForm(index);
+  },
+
+  deleteShortcut(index) {
+    state.shortcuts.splice(index, 1);
+    saveState();
+    Shortcuts.render();
+    this.renderShortcutsList();
+  },
+
   open() {
     this.panel?.classList.add("open");
     this.backdrop?.classList.add("open");
@@ -352,6 +499,7 @@ const Settings = {
   close_panel() {
     this.panel?.classList.remove("open");
     this.backdrop?.classList.remove("open");
+    this.hideShortcutForm();
   },
 };
 
@@ -384,7 +532,6 @@ const Focus = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Load state
   chrome.storage.sync.get(null, (items) => {
     if (items && items.theme) state.theme = items.theme;
     if (items && items.font) state.font = items.font;
@@ -392,6 +539,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (items && typeof items.showSeconds === "boolean")
       state.showSeconds = items.showSeconds;
     if (items && typeof items.focus === "string") state.focus = items.focus;
+    if (items && Array.isArray(items.shortcuts))
+      state.shortcuts = items.shortcuts;
 
     applyTheme();
     applyFont();
@@ -399,6 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Clock.init();
     Quotebar.init();
     Weather.init();
+    Shortcuts.init();
     Settings.init();
     Focus.init();
   });
