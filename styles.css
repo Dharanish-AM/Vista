@@ -398,42 +398,34 @@ body {
   color: var(--text-muted);
 }
 
-.date-container {
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 10px;
-  padding: 16px 32px;
-  border-radius: 24px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.02)
-  );
-  border: 1px solid var(--panel-border);
-  backdrop-filter: blur(12px);
-  box-shadow: var(--shadow);
   animation: fadeIn 0.9s ease-out 0.1s forwards;
+  opacity: 0;
+}
+
+.date-chip,
+.weather-chip {
+  padding: 12px 24px;
+  min-height: 48px; /* Increased slightly to ensure roomy fit */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem; /* Larger text as requested */
+  letter-spacing: 0.5px;
+  /* Reset generic chip absolute positioning if any */
   position: relative;
-  overflow: hidden;
 }
 
-.date-container::before {
-  content: "";
-  position: absolute;
-  inset: -40%;
-  background: conic-gradient(
-    from 90deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(224, 231, 255, 0.08),
-    rgba(255, 255, 255, 0.03)
-  );
-  filter: blur(60px);
-  animation: slowSpin 20s linear infinite;
-  opacity: 0.9;
-}
-
+/* Ensure no lingering display:none on useful classes if re-used */
+.weather-inline,
+.separator,
+.date-container,
 .date-below {
-  letter-spacing: 0.6px;
-  opacity: 0.85;
-  text-align: center;
+  display: none !important;
 }
 
 .tagline {
@@ -798,6 +790,14 @@ body {
   100% {
     background-position: 100% 20%;
   }
+}
+
+.hidden {
+  display: none !important;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 @keyframes floatUp {

@@ -6,9 +6,9 @@
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
-  "permissions": ["storage", "unlimitedStorage"],
+  "permissions": ["storage", "unlimitedStorage", "geolocation"],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://unpkg.com https://fonts.gstatic.com"
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' https://unpkg.com https://fonts.googleapis.com; font-src 'self' https://unpkg.com https://fonts.gstatic.com; connect-src 'self' https://api.open-meteo.com https://get.geojs.io"
   },
   "web_accessible_resources": [
     {
