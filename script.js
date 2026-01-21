@@ -1,15 +1,26 @@
 const CONFIG = {
   DEFAULT_THEME: "dark",
+  DEFAULT_FONT: "jetbrains",
+  DEFAULT_TIME_FORMAT: "12h",
+  DEFAULT_SHOW_SECONDS: true,
 };
 
 const state = {
-  theme: "dark",
+  theme: CONFIG.DEFAULT_THEME,
+  font: CONFIG.DEFAULT_FONT,
+  timeFormat: CONFIG.DEFAULT_TIME_FORMAT,
+  showSeconds: CONFIG.DEFAULT_SHOW_SECONDS,
+  focus: "",
 };
 
 const $ = (selector) => document.querySelector(selector);
 const saveState = () => {
   const toSave = {
     theme: state.theme,
+    font: state.font,
+    timeFormat: state.timeFormat,
+    showSeconds: state.showSeconds,
+    focus: state.focus,
   };
   chrome.storage.sync.set(toSave);
 };
@@ -25,11 +36,17 @@ const applyTheme = () => {
   }
 };
 
+const applyFont = () => {
+  const font = state.font || CONFIG.DEFAULT_FONT;
+  document.documentElement.setAttribute("data-font", font);
+};
+
 const Clock = {
   init() {
     this.timeDisplay = $("#time-display");
     this.dateDisplay = $("#date-display");
     this.greeting = $("#greeting");
+    this.lastGreeting = "";
     this.update();
     setInterval(() => this.update(), 1000);
   },
@@ -40,10 +57,20 @@ const Clock = {
     const m = now.getMinutes().toString().padStart(2, "0");
     const s = now.getSeconds().toString().padStart(2, "0");
 
-    h = h % 12;
-    h = h ? h : 12;
+    if (state.timeFormat === "12h") {
+      h = h % 12;
+      h = h ? h : 12;
+    }
 
-    this.timeDisplay.innerHTML = `${h}:${m}<span class="seconds">:${s}</span>`;
+    const hourStr = state.timeFormat === "12h"
+      ? h.toString().padStart(2, "0")
+      : h.toString().padStart(2, "0");
+
+    const secondsMarkup = state.showSeconds
+      ? `<span class="seconds">:${s}</span>`
+      : "";
+
+    this.timeDisplay.innerHTML = `${hourStr}:${m}${secondsMarkup}`;
 
     const secondsEl = this.timeDisplay.querySelector(".seconds");
     if (secondsEl) {
@@ -68,7 +95,13 @@ const Clock = {
       else if (hour >= 17 && hour < 22) message = "Good evening";
       else message = "Up late?";
 
-      this.greeting.textContent = message;
+      if (this.lastGreeting !== message) {
+        this.greeting.classList.remove("greeting-fade");
+        void this.greeting.offsetWidth;
+        this.greeting.textContent = message;
+        this.greeting.classList.add("greeting-fade");
+        this.lastGreeting = message;
+      }
     }
   },
 };
@@ -238,6 +271,9 @@ const Settings = {
     this.backdrop = $("#settings-backdrop");
     this.close = $("#settings-close");
     this.themeOptions = $("#theme-options");
+    this.fontOptions = $("#font-options");
+    this.timeFormatOptions = $("#time-format-options");
+    this.secondsToggle = $("#seconds-toggle");
 
     this.bind();
     this.render();
@@ -257,11 +293,54 @@ const Settings = {
         this.render();
       });
     });
+
+    this.fontOptions?.querySelectorAll(".pill").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const font = e.target.dataset.value;
+        state.font = font;
+        saveState();
+        applyFont();
+        this.render();
+      });
+    });
+
+    this.timeFormatOptions?.querySelectorAll(".pill").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const format = e.target.dataset.value;
+        state.timeFormat = format;
+        saveState();
+        Clock.update();
+        this.render();
+      });
+    });
+
+    this.secondsToggle?.querySelectorAll(".pill").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const value = e.target.dataset.value;
+        state.showSeconds = value === "show";
+        saveState();
+        Clock.update();
+        this.render();
+      });
+    });
   },
 
   render() {
     this.themeOptions?.querySelectorAll(".pill").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.value === state.theme);
+    });
+
+    this.fontOptions?.querySelectorAll(".pill").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.value === state.font);
+    });
+
+    this.timeFormatOptions?.querySelectorAll(".pill").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.value === state.timeFormat);
+    });
+
+    this.secondsToggle?.querySelectorAll(".pill").forEach((btn) => {
+      const isShow = btn.dataset.value === "show";
+      btn.classList.toggle("active", state.showSeconds === isShow);
     });
   },
 
@@ -276,16 +355,51 @@ const Settings = {
   },
 };
 
+const Focus = {
+  init() {
+    this.input = $("#focus-input");
+    if (!this.input) return;
+    if (state.focus) {
+      this.input.value = state.focus;
+    }
+    this.bind();
+  },
+
+  bind() {
+    this.input.addEventListener("change", (e) => {
+      const value = e.target.value.trim();
+      state.focus = value;
+      saveState();
+    });
+
+    this.input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        const value = e.target.value.trim();
+        state.focus = value;
+        saveState();
+        this.input.blur();
+      }
+    });
+  },
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   // Load state
   chrome.storage.sync.get(null, (items) => {
     if (items && items.theme) state.theme = items.theme;
+    if (items && items.font) state.font = items.font;
+    if (items && items.timeFormat) state.timeFormat = items.timeFormat;
+    if (items && typeof items.showSeconds === "boolean")
+      state.showSeconds = items.showSeconds;
+    if (items && typeof items.focus === "string") state.focus = items.focus;
 
     applyTheme();
+    applyFont();
 
     Clock.init();
     Quotebar.init();
     Weather.init();
     Settings.init();
+    Focus.init();
   });
 });

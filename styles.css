@@ -28,6 +28,18 @@
   --transition-speed: 0.3s;
 }
 
+:root[data-font="inter"] {
+  --font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+:root[data-font="playfair"] {
+  --font-family: "Playfair Display", "Times New Roman", serif;
+}
+
+:root[data-font="robotoMono"] {
+  --font-family: "Roboto Mono", "SFMono-Regular", monospace;
+}
+
 [data-theme="light"] {
   --bg-rgb: 255, 255, 255;
   --text-rgb: 29, 29, 31;
@@ -126,6 +138,13 @@ body {
   transition:
     background-color var(--transition-speed),
     color var(--transition-speed);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-family);
 }
 
 #app {
@@ -258,9 +277,16 @@ body {
 .top-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
   justify-content: space-between;
   position: relative;
+}
+
+.top-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
 }
 
 .chip {
@@ -323,7 +349,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 40px;
+  gap: 32px;
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
@@ -398,6 +424,52 @@ body {
   color: var(--text-muted);
 }
 
+#greeting {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+#greeting.greeting-fade {
+  animation: fadeSwap 0.45s ease;
+}
+
+.focus-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.focus-label {
+  color: var(--text-muted);
+  font-size: 1rem;
+  text-align: center;
+  letter-spacing: 0.2px;
+}
+
+#focus-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--panel-border);
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 1.05rem;
+  text-align: center;
+  outline: none;
+  transition:
+    border-color var(--transition-speed),
+    background-color var(--transition-speed),
+    box-shadow var(--transition-speed);
+}
+
+#focus-input:focus {
+  border-color: rgba(var(--accent-rgb), 0.45);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+
 .info-row {
   display: flex;
   align-items: center;
@@ -405,6 +477,13 @@ body {
   margin-bottom: 10px;
   animation: fadeIn 0.9s ease-out 0.1s forwards;
   opacity: 0;
+}
+
+.top-info {
+  margin-bottom: 0;
+  animation: none;
+  opacity: 1;
+  margin-right: 10em;
 }
 
 .date-chip,
@@ -447,6 +526,7 @@ body {
     shimmer 5s ease-in-out infinite,
     fadeIn 1s ease-out 0.2s forwards;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
 .quick-actions {
@@ -560,7 +640,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%) scale(0.95);
   width: 100%;
-  max-width: 380px;
+  max-width: 440px;
   padding: 28px;
   border-radius: 24px;
   background: var(--settings-bg);
@@ -655,6 +735,7 @@ body {
     color 0.2s ease,
     background 0.2s ease;
   font-size: 0.9rem;
+  flex-shrink: 0;
 }
 
 .pill.active {
@@ -724,6 +805,17 @@ body {
   from {
     opacity: 0;
     transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSwap {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
   }
   to {
     opacity: 1;

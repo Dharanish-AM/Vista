@@ -11,6 +11,10 @@
       rel="stylesheet"
     />
     <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600&family=Roboto+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
       rel="stylesheet"
       href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
     />
@@ -26,7 +30,15 @@
     </div>
     <div id="app">
       <header class="top-bar">
-        <div class="chip" id="greeting">Hello there</div>
+        <div class="top-stack">
+          <div class="chip" id="greeting">Hello there</div>
+        </div>
+        <div class="info-row top-info">
+            <div class="chip date-chip">
+              <span id="date-display">Monday, Jan 20</span>
+            </div>
+            <div id="weather-chip" class="chip weather-chip hidden"></div>
+          </div>
         <button
           class="chip icon-chip"
           id="settings-toggle"
@@ -37,17 +49,20 @@
       </header>
 
       <main class="center-content">
-        <div class="info-row">
-          <div class="chip date-chip">
-            <span id="date-display">Monday, Jan 20</span>
-          </div>
-          <div id="weather-chip" class="chip weather-chip hidden"></div>
-        </div>
+        <p class="tagline">Stay sharp. Build smart.</p>
         <div id="clock-widget" class="widget clock-widget">
           <h1 id="time-display">00:00:00</h1>
         </div>
-        <p class="tagline">Stay sharp. Build smart.</p>
-
+        <div class="focus-block">
+          <label for="focus-input" class="focus-label">What is your main focus for today?</label>
+          <input
+            id="focus-input"
+            type="text"
+            name="focus"
+            autocomplete="off"
+            placeholder="Type your focus and press Enter"
+          />
+        </div>
         <div class="quick-actions">
           <a
             class="action-chip"
@@ -107,6 +122,28 @@
             <button class="pill" data-value="coffee">Coffee</button>
             <button class="pill" data-value="botanical">Botanical</button>
             <button class="pill" data-value="rose">Rose</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <label class="group-label">Fonts</label>
+          <div class="pill-options" id="font-options">
+            <button class="pill" data-value="jetbrains">JetBrains Mono</button>
+            <button class="pill" data-value="inter">Inter</button>
+            <button class="pill" data-value="playfair">Playfair Display</button>
+            <button class="pill" data-value="robotoMono">Roboto Mono</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <label class="group-label">Time & Date</label>
+          <div class="pill-options" id="time-format-options">
+            <button class="pill" data-value="12h">12-hour</button>
+            <button class="pill" data-value="24h">24-hour</button>
+          </div>
+          <div class="pill-options" id="seconds-toggle">
+            <button class="pill" data-value="show">Show seconds</button>
+            <button class="pill" data-value="hide">Hide seconds</button>
           </div>
         </div>
       </section>
