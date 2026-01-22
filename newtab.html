@@ -87,17 +87,18 @@
           </button>
         </div>
 
-        <div class="settings-group">
-          <label class="group-label">Theme</label>
-          <div class="pill-options" id="theme-options">
-            <button class="pill" data-value="dark">Dark</button>
-            <button class="pill" data-value="light">Light</button>
-            <button class="pill" data-value="nebula">Nebula</button>
-            <button class="pill" data-value="coffee">Coffee</button>
-            <button class="pill" data-value="botanical">Botanical</button>
-            <button class="pill" data-value="rose">Rose</button>
+        <div class="settings-content">
+          <div class="settings-group">
+            <label class="group-label">Theme</label>
+            <div class="pill-options" id="theme-options">
+              <button class="pill" data-value="dark">Dark</button>
+              <button class="pill" data-value="light">Light</button>
+              <button class="pill" data-value="nebula">Nebula</button>
+              <button class="pill" data-value="coffee">Coffee</button>
+              <button class="pill" data-value="botanical">Botanical</button>
+              <button class="pill" data-value="rose">Rose</button>
+            </div>
           </div>
-        </div>
 
         <div class="settings-group">
           <label class="group-label">Fonts</label>
@@ -177,6 +178,15 @@
             <button class="pill" data-value="show">Show seconds</button>
             <button class="pill" data-value="hide">Hide seconds</button>
           </div>
+        </div>
+
+        <div class="settings-group">
+          <label class="group-label">Updates</label>
+          <button id="check-updates-btn" class="pill full-width">
+            <i class="ph ph-download"></i> Check for Updates
+          </button>
+          <div id="update-status" class="update-status"></div>
+        </div>
         </div>
       </section>
     </div>

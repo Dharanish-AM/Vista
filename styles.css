@@ -657,6 +657,7 @@ textarea {
   transform: translate(-50%, -50%) scale(0.95);
   width: 100%;
   max-width: 440px;
+  max-height: 85vh;
   padding: 28px;
   border-radius: 24px;
   background: var(--settings-bg);
@@ -671,6 +672,9 @@ textarea {
     opacity 0.25s ease,
     transform 0.25s ease;
   z-index: 5;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .settings-panel.open {
@@ -683,8 +687,36 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0;
+  margin-bottom: 16px;
   gap: 12px;
+  flex-shrink: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.settings-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+}
+
+.settings-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.settings-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.settings-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+.settings-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .settings-title {
@@ -1119,6 +1151,89 @@ textarea {
 
 .hidden {
   display: none !important;
+}
+
+.update-status {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  display: none;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.update-status:not(.hidden) {
+  display: block;
+}
+
+.update-status.success {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #4caf50;
+}
+
+.update-status.error {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #f44336;
+}
+
+.update-status p {
+  margin: 6px 0;
+  word-wrap: break-word;
+}
+
+.update-status strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.update-status code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  display: block;
+  margin: 8px 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.update-note {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-top: 8px !important;
+}
+
+.update-status a {
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.update-status a:hover {
+  opacity: 0.8;
+}
+
+.update-link {
+  color: inherit !important;
+  text-decoration: underline !important;
+}
+
+.pill.full-width {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
 /* Responsive Design */
 

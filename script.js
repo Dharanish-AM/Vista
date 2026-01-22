@@ -531,6 +531,81 @@ const Focus = {
   },
 };
 
+const Updates = {
+  init() {
+    this.checkBtn = $("#check-updates-btn");
+    this.statusDiv = $("#update-status");
+    if (!this.checkBtn) return;
+    
+    this.checkBtn.addEventListener("click", () => this.checkForUpdates());
+  },
+
+  async checkForUpdates() {
+    this.checkBtn.disabled = true;
+    this.statusDiv.textContent = "Checking for updates...";
+    this.statusDiv.classList.remove("hidden", "success", "error");
+    
+    try {
+      const response = await fetch("https://api.github.com/repos/Dharanish-AM/Vista/releases/latest", {
+        headers: {
+          "User-Agent": "Vista-Extension",
+          "Accept": "application/vnd.github.v3+json"
+        }
+      });
+      
+      if (response.status === 403) {
+        throw new Error("rate-limited");
+      }
+      
+      if (!response.ok) {
+        throw new Error(`GitHub API returned ${response.status}`);
+      }
+      
+      const releaseData = await response.json();
+      const latestVersion = releaseData.tag_name.replace("v", "");
+      const currentVersion = chrome.runtime.getManifest().version;
+      
+      if (this.compareVersions(latestVersion, currentVersion) > 0) {
+        this.statusDiv.innerHTML = `
+          <p><strong>Update available: v${latestVersion}</strong></p>
+          <p class="update-note">Run in Terminal:</p>
+          <code>cd /Users/dharanisham/Developer/Github-Repositories/Vista && git pull</code>
+        `;
+        this.statusDiv.classList.add("success");
+      } else {
+        this.statusDiv.innerHTML = `<p><strong>✓ Latest version (v${currentVersion})</strong></p>`;
+        this.statusDiv.classList.add("success");
+      }
+    } catch (error) {
+      console.error("Update check error:", error);
+      this.statusDiv.innerHTML = `
+        <p><strong>Unable to check automatically</strong></p>
+        <p class="update-note">Run in Terminal:</p>
+        <code>cd /Users/dharanisham/Developer/Github-Repositories/Vista && git pull</code>
+        <p class="update-note"><a href="https://github.com/Dharanish-AM/Vista/releases" target="_blank" class="update-link">View releases on GitHub</a></p>
+      `;
+      this.statusDiv.classList.add("error");
+    } finally {
+      this.checkBtn.disabled = false;
+    }
+  },
+
+  compareVersions(v1, v2) {
+    const parts1 = v1.split(".").map(Number);
+    const parts2 = v2.split(".").map(Number);
+    
+    for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
+      const num1 = parts1[i] || 0;
+      const num2 = parts2[i] || 0;
+      
+      if (num1 > num2) return 1;
+      if (num1 < num2) return -1;
+    }
+    
+    return 0;
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   chrome.storage.sync.get(null, (items) => {
     if (items && items.theme) state.theme = items.theme;
@@ -550,6 +625,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Weather.init();
     Shortcuts.init();
     Settings.init();
+    Updates.init();
     Focus.init();
   });
 });
